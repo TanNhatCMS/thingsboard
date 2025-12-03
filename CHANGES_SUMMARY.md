@@ -54,7 +54,7 @@
 
 ### 3. Scripts Build Cho Máy Cấu Hình Yếu
 
-✅ **Đã thêm 4 scripts shell để build trên máy cấu hình thấp**
+✅ **Đã thêm 5 scripts shell để build trên máy cấu hình thấp**
 
 #### a) `build-low-spec.sh` - Build Thông Minh
 - Tự động phát hiện RAM và tối ưu hóa
@@ -81,9 +81,22 @@
 ./build-incremental.sh
 ```
 
-#### c) `build-ui-only.sh` - Chỉ Build Giao Diện
-- Nhanh nhất (5-10 phút)
-- Chỉ build phần frontend
+#### c) `build-ui-update.sh` - Build Lại UI và Cập Nhật Gói **[MỚI]**
+- **Chỉ build lại frontend, không build lại backend**
+- Cập nhật gói ứng dụng hoàn chỉnh với UI mới
+- Nhanh nhất cho việc cập nhật UI (5-10 phút)
+- Phù hợp cho: thay đổi translations, styles, UI fixes
+
+```bash
+# Build lại UI và tạo lại gói hoàn chỉnh
+./build-ui-update.sh
+```
+
+**Yêu cầu:** Phải đã có 1 lần build đầy đủ trước đó
+
+#### d) `build-ui-only.sh` - Chỉ Build Giao Diện
+- Chỉ build phần frontend (không đóng gói)
+- Dành cho phát triển UI
 - Không cần build backend
 
 ```bash
@@ -94,7 +107,7 @@
 ./build-ui-only.sh dev
 ```
 
-#### d) `clean-build.sh` - Dọn Dẹp
+#### e) `clean-build.sh` - Dọn Dẹp
 - Xóa các file build cũ
 - Giải phóng dung lượng ổ đĩa
 - 3 mức độ: light, medium, full
@@ -195,7 +208,7 @@ Thêm mới:
 
 ### 3. Build Scripts for Low-Spec Machines
 
-✅ **Added 4 shell scripts for building on low-resource machines**
+✅ **Added 5 shell scripts for building on low-resource machines**
 
 #### a) `build-low-spec.sh` - Smart Build
 - Auto-detects RAM and optimizes
@@ -222,9 +235,22 @@ Thêm mới:
 ./build-incremental.sh
 ```
 
-#### c) `build-ui-only.sh` - UI Build Only
-- Fastest (5-10 minutes)
-- Frontend only
+#### c) `build-ui-update.sh` - Rebuild UI & Update Package **[NEW]**
+- **Rebuilds ONLY frontend without rebuilding backend**
+- Updates complete application package with new UI
+- Fastest for UI updates (5-10 minutes)
+- Perfect for: translation updates, style changes, UI fixes
+
+```bash
+# Rebuild UI and update complete package
+./build-ui-update.sh
+```
+
+**Requires:** Previous full build must exist
+
+#### d) `build-ui-only.sh` - UI Build Only
+- Frontend only (no packaging)
+- For UI development
 - No backend build needed
 
 ```bash
@@ -235,7 +261,7 @@ Thêm mới:
 ./build-ui-only.sh dev
 ```
 
-#### d) `clean-build.sh` - Cleanup
+#### e) `clean-build.sh` - Cleanup
 - Remove old build artifacts
 - Free up disk space
 - 3 levels: light, medium, full
@@ -301,9 +327,15 @@ GitHub → Actions → "Maven Build with Docker" → Run workflow
 ./build-low-spec.sh --skip-tests
 ```
 
-### To build UI only:
+### To rebuild UI only (after initial build):
 ```bash
-./build-ui-only.sh prod
+# Rebuild UI and update complete package (5-10 min)
+./build-ui-update.sh
+```
+
+### To build UI for development:
+```bash
+./build-ui-only.sh dev
 ```
 
 ## Support

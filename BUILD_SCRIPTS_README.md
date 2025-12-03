@@ -75,15 +75,53 @@ Builds ThingsBoard modules one at a time to minimize memory usage.
 
 **Build Time:** 60-90 minutes
 
-### 3. `build-ui-only.sh` - UI Build Only
+### 3. `build-ui-update.sh` - UI Rebuild with Package Update
 
-Builds only the Angular UI without the backend.
+Rebuilds ONLY the frontend and repackages the complete application without rebuilding the backend.
+
+**Best for:**
+- Quick UI iterations during development
+- Updating UI translations or styles
+- Testing UI changes without full rebuild
+- Much faster than full rebuild (~5-10 minutes vs 20-60 minutes)
+
+**Usage:**
+```bash
+./build-ui-update.sh
+```
+
+**What it does:**
+1. Cleans only UI build artifacts
+2. Rebuilds the frontend (ui-ngx module)
+3. Repackages the application with new UI
+
+**What it does NOT rebuild (saves time):**
+- Backend services
+- Rule engine
+- Transport protocols
+- DAO layer
+
+**Result:**
+- Complete application packages (DEB, RPM, ZIP) with updated UI
+- Backend remains unchanged from previous build
+
+**Build Time:** 5-10 minutes
+
+**Requirements:**
+- Java 17+
+- Maven 3.1.0+
+- Node.js 18+
+- Previous full build must exist
+
+### 4. `build-ui-only.sh` - UI Build Only
+
+Builds only the Angular UI without the backend or packaging.
 
 **Best for:**
 - UI development
-- Testing UI changes
+- Testing UI changes in isolation
 - Machines with limited resources
-- Quick iteration
+- Quick iteration without packaging
 
 **Usage:**
 ```bash
@@ -106,7 +144,7 @@ Builds only the Angular UI without the backend.
 - Production: 5-10 minutes
 - Development server: 2-3 minutes to start
 
-### 4. `clean-build.sh` - Cleanup Script
+### 5. `clean-build.sh` - Cleanup Script
 
 Removes build artifacts and caches to free disk space.
 
@@ -170,17 +208,37 @@ Removes build artifacts and caches to free disk space.
 ./build-low-spec.sh --skip-tests
 ```
 
-3. If UI development only:
+3. If UI development/updates only:
 ```bash
+# For UI changes with full package update
+./build-ui-update.sh
+
+# Or for UI-only development
 ./build-ui-only.sh dev
 ```
 
 ### For Normal Machines (4GB+ RAM)
 
-Use the standard build with optimizations:
+1. Standard build:
 ```bash
 ./build-low-spec.sh
 ```
+
+2. Quick UI updates after initial build:
+```bash
+./build-ui-update.sh
+```
+
+### For UI-Only Changes (After Initial Build)
+
+If you've already done a full build and only need to update UI:
+
+```bash
+# Rebuild UI and update complete package (5-10 minutes)
+./build-ui-update.sh
+```
+
+This is much faster than full rebuild and gives you complete packages!
 
 ## Troubleshooting
 
@@ -315,6 +373,35 @@ mvn clean install -DskipTests -Ddockerfile.skip=false
 
 # Skip UI build
 mvn clean install -DskipTests -Dui.skip=true
+
+# Rebuild UI only and repackage
+mvn clean -pl ui-ngx && mvn install -pl ui-ngx -DskipTests && mvn package -pl application -DskipTests
+
+# Parallel build (use 80% of CPU cores) with license formatting
+mvn -T 0.8C license:format clean install -DskipTests -Ddockerfile.skip=false
+```
+
+### Tips and Tricks
+
+**Clean caches before build (when troubleshooting):**
+```bash
+# Clean Maven cache
+rm -rf ~/.m2/repository
+
+# Clean Gradle cache
+rm -rf ~/.gradle/caches/
+
+# Clean node modules
+rm -rf ui-ngx/node_modules
+```
+
+**Build in parallel for faster execution:**
+```bash
+# Use 80% of CPU cores
+mvn -T 0.8C clean install -DskipTests
+
+# Or specify exact number of threads
+mvn -T 4 clean install -DskipTests
 ```
 
 ### UI Only
