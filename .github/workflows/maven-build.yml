@@ -69,7 +69,7 @@ jobs:
       
       - name: Build with Maven
         run: |
-          if [ "${{ github.event.inputs.skip_tests }}" == "true" ]; then
+          if [ "${{ github.event.inputs.skip_tests }}" = "true" ]; then
             mvn clean install -DskipTests
           else
             mvn clean install
@@ -130,7 +130,7 @@ jobs:
       
       - name: Build with Maven and Docker
         run: |
-          if [ "${{ github.event.inputs.skip_tests }}" == "true" ]; then
+          if [ "${{ github.event.inputs.skip_tests }}" = "true" ]; then
             mvn clean install -DskipTests -Ddockerfile.skip=false
           else
             mvn clean install -Ddockerfile.skip=false
