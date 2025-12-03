@@ -7,11 +7,25 @@ A GitHub Actions workflow has been added to automatically build ThingsBoard usin
 ## Workflow File
 
 - **Location**: `.github/workflows/maven-build.yml`
-- **Triggers**: Push to master/main branches, Pull Requests, Manual dispatch
+- **Trigger**: Manual dispatch only (workflow_dispatch)
+- **Manual Run**: Go to Actions tab → Select workflow → Click "Run workflow"
 
 ## Build Jobs
 
-### 1. Maven Build Job
+The workflow provides two build options that can be selected when running manually:
+
+### Build Type Options
+
+1. **packages** (default) - Build only DEB, RPM, and ZIP packages
+2. **docker** - Build only Docker images
+3. **both** - Build both packages and Docker images
+
+### Test Options
+
+- **Skip tests** (default: true) - Skip running tests to speed up build
+- **Run tests** (false) - Run all tests during build
+
+### 1. Maven Build Job (packages)
 
 This job builds ThingsBoard packages without running tests.
 
@@ -128,13 +142,73 @@ docker-compose up -d
 
 ## Manual Workflow Dispatch
 
-You can manually trigger the workflow:
+To manually trigger the build workflow:
 
-1. Go to Actions tab
-2. Select "Maven Build with Docker" workflow
-3. Click "Run workflow"
-4. Select the branch
-5. Click "Run workflow" button
+### Step 1: Navigate to Actions
+
+1. Go to your GitHub repository
+2. Click on the **Actions** tab at the top
+
+### Step 2: Select Workflow
+
+1. In the left sidebar, find and click **"Maven Build with Docker"**
+2. Click the **"Run workflow"** button on the right
+
+### Step 3: Configure Build Options
+
+You'll see a form with the following options:
+
+**Branch Selection:**
+- Choose the branch you want to build from (e.g., master, main, your feature branch)
+
+**Build Type:**
+- **packages** - Build DEB, RPM, and ZIP packages only (faster, ~20-30 min)
+- **docker** - Build Docker images only (~25-35 min)
+- **both** - Build everything (~40-60 min)
+
+**Skip Tests:**
+- ☑ **Checked (default)** - Skip tests for faster build (recommended)
+- ☐ **Unchecked** - Run all tests (slower, but more thorough)
+
+### Step 4: Run the Workflow
+
+1. Click the green **"Run workflow"** button at the bottom
+2. Wait for the workflow to start (may take a few seconds)
+3. Click on the running workflow to see live progress
+
+### Example Usage Scenarios
+
+**Scenario 1: Quick build for testing**
+```
+Branch: main
+Build type: packages
+Skip tests: ✓ (checked)
+→ Fast build, get DEB/RPM/ZIP files in ~20 minutes
+```
+
+**Scenario 2: Docker images for deployment**
+```
+Branch: main
+Build type: docker
+Skip tests: ✓ (checked)
+→ Get Docker images as tar files in ~25 minutes
+```
+
+**Scenario 3: Full build with tests**
+```
+Branch: main
+Build type: both
+Skip tests: ☐ (unchecked)
+→ Complete build with testing in ~60-90 minutes
+```
+
+**Scenario 4: Everything without tests (recommended)**
+```
+Branch: main
+Build type: both
+Skip tests: ✓ (checked)
+→ All artifacts without tests in ~40 minutes
+```
 
 ## Build Time
 
