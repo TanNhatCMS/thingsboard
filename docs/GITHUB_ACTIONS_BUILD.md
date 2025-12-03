@@ -83,7 +83,7 @@ This job builds Docker images that can be used locally without Docker Hub.
 sudo dpkg -i thingsboard-*.deb
 ```
 
-**RedHat/CentOS:**
+**Red Hat/CentOS:**
 ```bash
 sudo rpm -ivh thingsboard-*.rpm
 ```
