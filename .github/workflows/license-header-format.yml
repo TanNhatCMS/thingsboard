@@ -17,9 +17,11 @@
 name: License header format
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'master'
+      - 'dev'
       - 'develop/3*'
       - 'hotfix/3*'
 
