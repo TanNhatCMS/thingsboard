@@ -20,6 +20,8 @@ on:
   push:
     branches:
       - 'master'
+      - 'dev'
+      - 'main'
       - 'develop/3*'
       - 'hotfix/3*'
 
